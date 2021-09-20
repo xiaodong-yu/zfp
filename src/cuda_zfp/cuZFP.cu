@@ -14,9 +14,11 @@
 
 #include "pointers.cuh"
 #include "type_info.cuh"
+#include "timingGPU.cuh"
 #include <iostream>
 #include <assert.h>
 
+TimingGPU timer_GPU;
 // we need to know about bitstream, but we don't 
 // want duplicate symbols.
 #ifndef inline_
@@ -377,6 +379,7 @@ cuda_compress(zfp_stream *stream, const zfp_field *field)
     return 0;
   }
 
+  timer_GPU.StartCounter();
   Word *d_stream = internal::setup_device_stream_compress(stream, field);
 
   if(field->type == zfp_type_float)
@@ -400,6 +403,7 @@ cuda_compress(zfp_stream *stream, const zfp_field *field)
     stream_bytes = internal::encode<long long int>(dims, stride, (int)stream->maxbits, data, d_stream);
   }
 
+  printf("GPU compression timing: %f ms\n", timer_GPU.GetCounter());
   internal::cleanup_device_ptr(stream->stream->begin, d_stream, stream_bytes, 0, field->type);
   internal::cleanup_device_ptr(field->data, d_data, 0, offset, field->type);
 
@@ -436,6 +440,7 @@ cuda_decompress(zfp_stream *stream, zfp_field *field)
     return;
   }
 
+  timer_GPU.StartCounter();
   Word *d_stream = internal::setup_device_stream_decompress(stream, field);
 
   if(field->type == zfp_type_float)
@@ -467,7 +472,7 @@ cuda_decompress(zfp_stream *stream, zfp_field *field)
     std::cerr<<"Cannot decompress: type unknown\n";
   }
 
-   
+  printf("GPU decompression timing: %f ms\n", timer_GPU.GetCounter()); 
   size_t type_size = zfp_type_size(field->type);
 
   size_t field_size = 1;

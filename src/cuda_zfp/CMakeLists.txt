@@ -1,11 +1,12 @@
 ###############################################################################
 #
-#  file: src/cuZFP/CMakeLists.txt 
+#  file: src/cuZFP/CMakeLists.txt
 #
 ###############################################################################
 
 set(cuZFP_sources
     cuZFP.cu         # main entry point
+    timingGPU.cuh
     decode.cuh
     decode1.cuh
     decode2.cuh
