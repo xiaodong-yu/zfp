@@ -41,6 +41,7 @@ zfp may be built using either [CMake](https://cmake.org/) or
     cmake ..
     cmake --build . --config Release
     ctest
+    Compress then decompress: build/bin/zfp -i data/aramco-snapshot-1500.f32 -o data/aramco-snapshot-1500.f32.zfp -f -1 47376235 -r 16 -x cuda -s 
 
 This builds the zfp library in the `build/lib` directory and the zfp
 command-line executable in the `build/bin` directory.  It then runs
